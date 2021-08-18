@@ -1,19 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  makeStyles,
-  TextField,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import Controls from "../../App/components/controls/Controls";
 import { useForm, Form } from "../../App/components/useForm";
-import Input from "../../App/components/controls/Input";
-import RadioGroup from "../../App/components/controls/RadioGroup";
-
+import * as employeeService from "../../services/employeeService";
 const genderItems = [
   { id: "male", title: "Male" },
   { id: "female", title: "Female" },
@@ -70,6 +59,21 @@ export default function EmployeeForm() {
             value={values.gender}
             onChange={handleInputChange}
             items={genderItems}
+          />
+          <Controls.Select
+            row
+            name="departmentId"
+            label="Department"
+            value={values.departmentId}
+            onChange={handleInputChange}
+            options={employeeService.getDepartmentCollection()}
+          />
+          <Controls.Checkbox
+            row
+            name="isPermanent"
+            label="Permanent Employee"
+            value={values.isPermanent}
+            onChange={handleInputChange}
           />
         </Grid>
       </Grid>
