@@ -32,16 +32,16 @@ import SearchIcon from '@material-ui/icons/Search';
 const useStyles = makeStyles(theme => (
     {
         root:{
-            backgroundColor:'#FFF',
-            transform:'translateZ(0)'
+            backgroundColor:'#fff',
+            // transform:'translateZ(0)'
         },
     
         searchInput : {
-            oacity:'',
+            opacity:'0.6',
             padding:`0px ${theme.spacing(1)}px`,
             fontSize:'0.8 rem',
             '& : hover': {
-                backgroundColor:'#F2F2F2'
+                backgroundColor:'#f2f2f2'
             },
     
             '& .MuiSvgIcon-root':{
@@ -64,7 +64,7 @@ const  classes  = useStyles();
                     <Grid item>
                         <InputBase
                         className={classes.searchInput}
-                        placeholder="Search Here"
+                        placeholder="Search topics"
                         startAdornment = {<SearchIcon fontSize="small" />}
                         />
                     </Grid>
@@ -83,7 +83,7 @@ const  classes  = useStyles();
                         </IconButton>
                         <IconButton>
                             <Badge>
-                                  <PowerSettingsNew/>
+                                  <PowerSettingsNew fontSize="small"/>
                             </Badge>
                         </IconButton>
                     </Grid>

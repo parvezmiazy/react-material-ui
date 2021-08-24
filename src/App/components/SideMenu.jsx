@@ -29,7 +29,7 @@ import { withStyles } from '@material-ui/core';
 // with withStyles
 
 const style = {
-    sideMenu: {
+  sideMenu: {
         display: 'flex',
         flexDirection: 'column',
         position: 'absolute',
@@ -40,15 +40,15 @@ const style = {
       }
     }
 
- const  Sidebar = (props) => {
+ const  SideMenu = (props) => {
 
    const  { classes }= props;
 
     return (
-        <div className={classes.Sidebar}>
+        <div className={classes.sideMenu}>
             
         </div>
     )
 }
 
-export default withStyles(style) (Sidebar);
+export default withStyles(style) (SideMenu);

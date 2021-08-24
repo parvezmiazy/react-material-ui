@@ -5,14 +5,14 @@ import {
   ThemeProvider,
 } from "@material-ui/core";
 import "./App.css";
-import Sidebar from "./components/Sidebar";
+import SideMenu from "./components/SideMenu";
 import Header from "./components/Header";
 import Employees from "../pages/Employees/Employees";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#FF0000",
+      main: "#333996",
       light: "#3c44b126",
     },
     secondary: {
@@ -50,9 +50,9 @@ function App() {
   const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
-      <Sidebar />
+      <SideMenu />
 
-      <div className={classes.AppMain}>
+      <div className={classes.appMain}>
         <Header />
         <Employees />
       </div>

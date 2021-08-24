@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Grid } from "@material-ui/core";
 import Controls from "../../App/components/controls/Controls";
 import { useForm, Form } from "../../App/components/useForm";
@@ -12,7 +12,7 @@ const genderItems = [
 const initialFValues = {
   id: 0,
   fullName: "",
-  Email: "",
+  email: "",
   mobile: "",
   City: "",
   gender: "male",
@@ -24,10 +24,32 @@ const initialFValues = {
 export default function EmployeeForm() {
   // const [values, setValues] = useState(initialFValues);
 
-  const { values, setValues, handleInputChange } = useForm(initialFValues);
+  const validate = () => {
+    let temp = {};
+    temp.fullName = values.fullName ? "" : "This field is required.";
+    temp.email = /$|.+@.+..+/.test(values.email) ? "" : "Email is not valid.";
+    temp.mobile =
+      values.mobile.length > 10 ? "" : "Minimum 11 Number is required.";
+    temp.departmentId = values.departmentId.length = ""
+      ? ""
+      : "This field is required.";
+    setErrors({
+      ...temp,
+    });
+
+    return Object.values(temp).every((x) => x === "");
+  };
+
+  const { values, setValues, errors, setErrors, handleInputChange } =
+    useForm(initialFValues);
+
+  const handleSubmit = (e) => {
+    e.preventDafault();
+    if (validate()) window.alert("hello");
+  };
 
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <Grid container>
         <Grid item xs={6}>
           <Controls.Input
@@ -35,6 +57,7 @@ export default function EmployeeForm() {
             label="Full Name"
             value={values.fullName}
             onChange={handleInputChange}
+            error={errors.fullName}
           />
           <Controls.Input
             variant="outlined"
@@ -48,6 +71,13 @@ export default function EmployeeForm() {
             label="Mobile"
             name="mobile"
             value={values.mobile}
+            onChange={handleInputChange}
+          />
+          <Controls.Input
+            variant="outlined"
+            label="City"
+            name="city"
+            value={values.city}
             onChange={handleInputChange}
           />
         </Grid>
@@ -68,6 +98,13 @@ export default function EmployeeForm() {
             onChange={handleInputChange}
             options={employeeService.getDepartmentCollection()}
           />
+          <Controls.DatePicker
+            row
+            name="hireDate"
+            label="Hire Date"
+            value={values.hireDate}
+            onChange={handleInputChange}
+          />
           <Controls.Checkbox
             row
             name="isPermanent"
@@ -75,6 +112,11 @@ export default function EmployeeForm() {
             value={values.isPermanent}
             onChange={handleInputChange}
           />
+
+          <div>
+            <Controls.Button text="Submit" />
+            <Controls.Button color="default" text="Reset" />
+          </div>
         </Grid>
       </Grid>
     </Form>

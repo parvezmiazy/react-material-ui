@@ -8,7 +8,7 @@ export default function Checkbox(props) {
   const { name, label, value, onChange } = props;
 
   const convertToDefEventPara = (name, value) => ({
-    target: [name, value],
+    target: { name, value },
   });
   return (
     <FormControl>
