@@ -10,7 +10,9 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     setValues({
       ...values,
       [name]: value,
-    });
+    })
+    if(validateOnChange)
+    validate({[name]:value});
   };
 
   const resetForm = () => {

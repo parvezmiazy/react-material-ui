@@ -22,19 +22,24 @@ const initialFValues = {
 };
 
 export default function EmployeeForm() {
-  const validate = () => {
-    let temp = {};
-    temp.fullName = values.fullName ? "" : "This field is required.";
-    temp.email = /$^|.+@.+..+/.test(values.email) ? "" : "Email is not valid.";
+  const validate = (fieldValues = values) => {
+    let temp = {...errors}
+    if('fullName' in fieldValues)
+    temp.fullName = fieldValues.fullName ? "" : "This field is required.";
+    if('email' in fieldValues)
+    temp.email = /$^|.+@.+..+/.test(fieldValues.email) ? "" : "Email is not valid.";
+    if('mobile' in fieldValues)
     temp.mobile =
-      values.mobile.length > 10 ? "" : "Minimum 11 Number is required.";
+    fieldValues.mobile.length > 10 ? "" : "Minimum 11 Number is required.";
+      if('departmentId' in fieldValues)
     temp.departmentId =
-      values.departmentId.length !== 0 ? "" : "This field is required.";
+    fieldValues.departmentId.length !== 0 ? "" : "This field is required.";
     setErrors({
-      ...temp,
-    });
+      ...temp
+    })
 
-    return Object.values(temp).every((x) => x === "");
+    if(fieldValues === values)
+        return Object.values(temp).every(x => x === "")
   };
 
   const { values, errors, setErrors, handleInputChange, resetForm } = useForm(
@@ -46,6 +51,7 @@ export default function EmployeeForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
+      window.alert('testing...');
       //employeeService.insertEmployee(values)
       resetForm();
     }
