@@ -2,7 +2,7 @@ import React,{useState} from "react";
 //import EmployeeForm from "./EmployeeForm";
 import PageHeader from "../../App/components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
-import { makeStyles, Paper, Table, TableBody, TableCell, TableRow } from "@material-ui/core";
+import { makeStyles, Paper, TableBody, TableCell, TableRow } from "@material-ui/core";
 import useTable from "../../App/components/useTable";
 import * as employeeService from "../../services/employeeService";
 const useStyles = makeStyles((theme) => ({
@@ -11,10 +11,17 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }));
+
+const headCells = [
+  {id:'fullName',label:'Employee Name'},
+  {id:'email',label:'Email Address (Personal)'},
+  {id:'mobile',label:'Mobile Number'},
+  {id:'department',label:'Department'}
+]
 export default function Employees() {
   const classes = useStyles();
   const [records, setRecords] = useState(employeeService.getAllEmployees())
-  const {TblContainer} = useTable();
+  const {TblContainer,TblHead,TblPagination,recordsAfterPagingAndSorting} = useTable(records,headCells);
   return (
     <>
       <PageHeader
@@ -26,9 +33,10 @@ export default function Employees() {
       <Paper className={classes.pageContent}>
         {/* <EmployeeForm /> */}
         <TblContainer>
+          <TblHead/>
           <TableBody>
             {
-              records.map(
+             recordsAfterPagingAndSorting().map(
                 item=>(
                   (
                     <TableRow key={item.id}>
@@ -47,6 +55,11 @@ export default function Employees() {
                         item.mobile
                       }
                     </TableCell>
+                    <TableCell>
+                      {
+                        item.department
+                      }
+                    </TableCell>
                   </TableRow>
                   )
                 )
@@ -54,6 +67,7 @@ export default function Employees() {
             }
           </TableBody>
         </TblContainer>
+        <TblPagination/>
       </Paper>
     </>
   );
