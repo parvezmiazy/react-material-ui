@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-//import EmployeeForm from "./EmployeeForm";
+import EmployeeForm from "./EmployeeForm";
 import PageHeader from "../../App/components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
 import { makeStyles, Paper, TableBody, TableCell, TableRow,Toolbar,InputAdornment } from "@material-ui/core";
@@ -7,13 +7,20 @@ import useTable from "../../App/components/useTable";
 import * as employeeService from "../../services/employeeService";
 import Controls from "../../App/components/controls/Controls";
 import {Search } from "@material-ui/icons";
+import AddIcon  from "@material-ui/icons/Add";
+import PopUp from "../../App/components/PopUp";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
     padding: theme.spacing(3),
   },
   searchInput:{
-     width:'75%'
+     width:'75%',
+
+  },
+  newButton :{
+    position:'absolute',
+    right:'10px'
   }
 }));
 
@@ -27,6 +34,7 @@ export default function Employees() {
   const classes = useStyles();
   const [records, setRecords] = useState(employeeService.getAllEmployees())
   const [filterFn,setFilterFn] =useState({fn:items => {return items;}});
+  const [openPopUp,setOpenPopUp] = useState(false);
   const {TblContainer,TblHead,TblPagination,recordsAfterPagingAndSorting} = useTable(records,headCells,filterFn);
 
   const handleSearch = e =>{
@@ -39,6 +47,15 @@ export default function Employees() {
             return items.filter(x=> x.fullName.toLowerCase().includes(target.value))  
       }
     })
+  }
+
+  const addOrEdit = (employee,resetForm) =>{
+    // employeeService.insertEmployee(values)
+    //   resetForm();
+      employeeService.insertEmployee(employee)
+      resetForm();
+      setOpenPopUp(false)
+      setRecords(employeeService.getAllEmployees())
   }
   return (
     <>
@@ -55,7 +72,7 @@ export default function Employees() {
               label="Search Employees"
               className= {classes.searchInput}
               InputProps = {{
-                startAdorment:(<InputAdornment position ="start">
+                startAdornment:(<InputAdornment position ="start">
                 <Search/>
                 </InputAdornment>)
               }}
@@ -64,6 +81,15 @@ export default function Employees() {
             
            
         />
+        <Controls.Button
+        className={classes.newButton} 
+        variant="outlined" 
+        text="Add New" 
+        startIcon={<AddIcon/>}
+        onClick={()=>setOpenPopUp(true)}
+
+        />
+
         </Toolbar>
         <TblContainer>
           <TblHead/>
@@ -102,6 +128,13 @@ export default function Employees() {
         </TblContainer>
         <TblPagination/>
       </Paper>
+      <PopUp
+       title="Employee Form"
+       openPopUp={openPopUp}
+       setOpenPopUp={setOpenPopUp}
+      >
+      <EmployeeForm addOrEdit={addOrEdit}/>
+      </PopUp>
     </>
-  );
+  )
 }
