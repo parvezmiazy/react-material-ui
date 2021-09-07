@@ -11,7 +11,7 @@ import AddIcon  from "@material-ui/icons/Add";
 import PopUp from "../../App/components/PopUp";
 import EditOutlinedIcon  from "@material-ui/icons/EditOutlined";
 import CloseIcon  from "@material-ui/icons/Close";
-
+import Notification from "../../App/components/Notification";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -40,6 +40,7 @@ export default function Employees() {
   const [records, setRecords] = useState(employeeService.getAllEmployees())
   const [filterFn,setFilterFn] =useState({fn:items => {return items;}});
   const [openPopUp,setOpenPopUp] = useState(false);
+  const [notify,setNotify] = useState({isOpen:false,message:'',type:''});
   const {TblContainer,TblHead,TblPagination,recordsAfterPagingAndSorting} = useTable(records,headCells,filterFn);
 
   const handleSearch = e =>{
@@ -65,6 +66,11 @@ export default function Employees() {
       setRecordForEdit(null) 
       setOpenPopUp(false)
       setRecords(employeeService.getAllEmployees())
+      setNotify({
+        isOpen:true,
+        message:'Submitted Successfully',
+        type:'success'
+      })
   }
 
   const OpenInPopUp = item=>{
@@ -172,6 +178,10 @@ export default function Employees() {
       recordForEdit={recordForEdit}
       />
       </PopUp>
+      <Notification
+       notify={notify}
+       setNotify ={setNotify}
+      />
     </>
   )
 }
