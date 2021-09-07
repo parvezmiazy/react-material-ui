@@ -1,6 +1,6 @@
 import  {React,useState} from 'react'
 import {makeStyles, Table, TableCell, TableHead, TablePagination, TableRow, TableSortLabel} from '@material-ui/core'
-import { Sort } from '@material-ui/icons';
+
 
 
 const useStyles = makeStyles(theme=>({
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme=>({
 
     }
 }))
-export default function useTable(records,headCells) {
+export default function useTable(records,headCells,filterFn) {
 
     const classes = useStyles();
     const pages = [5,10,25]
@@ -43,24 +43,29 @@ export default function useTable(records,headCells) {
             setOrderBy(cellId)
         }
        
-        <TableHead>
+       return(<TableHead>
              <TableRow>
                  {
-                     headCells.map(headCell=>(<TableCell key={headCell.id} sortDirection={orderBy ===headCell.id?order:false}>
+                     headCells.map(headCell=>(
+                     <TableCell 
+                       key           ={headCell.id} 
+                       sortDirection = {orderBy === headCell.id?order:false}>
+                       {headCell.disableSorting?headCell.label:
                        <TableSortLabel 
-                       active ={orderBy === headCell.id}
-                       direction = {orderBy ===headCell.id?order:'asc'}
-                       onClick={()=>{
-                           handleSortRequest(headCell.id)
-                       }}>
-                         {
-                           headCell.label  
-                         }
+                         active     =    {orderBy === headCell.id}
+                         direction  = {orderBy ===headCell.id?order:'asc'}
+                         onClick    = {()=>{
+                                handleSortRequest(headCell.id)
+                            }}>
+                            {
+                            headCell.label  
+                            }
                        </TableSortLabel>
+                 }
                      </TableCell>))
                  }
              </TableRow>
-        </TableHead>
+        </TableHead>)
 }
 
     const handleChangePage = (event,newPage)=>{
@@ -98,8 +103,8 @@ export default function useTable(records,headCells) {
 
    function getComparator(order,orderBy){
       return order === 'desc'
-      ? (a,b)=>descendingComparator(a,b,orderBy)
-      :(a,b)=> -descendingComparator(a,b,orderBy);
+      ? (a,b) => descendingComparator(a,b,orderBy)
+      :(a,b)  => -descendingComparator(a,b,orderBy);
    }
 
    function descendingComparator(a,b,orderBy){
@@ -115,7 +120,8 @@ export default function useTable(records,headCells) {
    }
    
    const recordsAfterPagingAndSorting = ()=>{
-       return stableSort(records,getComparator(order,orderBy)).slice(page*rowsPerPage,(page+1)*rowsPerPage);
+       return stableSort(filterFn.fn(records),getComparator(order,orderBy))
+       .slice(page*rowsPerPage,(page+1)*rowsPerPage);
    }
     return {
         TblContainer,
