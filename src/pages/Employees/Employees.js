@@ -9,6 +9,9 @@ import Controls from "../../App/components/controls/Controls";
 import {Search } from "@material-ui/icons";
 import AddIcon  from "@material-ui/icons/Add";
 import PopUp from "../../App/components/PopUp";
+import EditOutlinedIcon  from "@material-ui/icons/EditOutlined";
+import CloseIcon  from "@material-ui/icons/Close";
+
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -28,10 +31,12 @@ const headCells = [
   {id:'fullName',label:'Employee Name'},
   {id:'email',label:'Email Address (Personal)'},
   {id:'mobile',label:'Mobile Number'},
-  {id:'department',label:'Department',disableSorting:true}
+  {id:'department',label:'Department',disableSorting:true},
+  {id:'actions',label:'Actions',disableSorting:true}
 ]
 export default function Employees() {
   const classes = useStyles();
+  const [recordForEdit,setRecordForEdit] = useState(null);
   const [records, setRecords] = useState(employeeService.getAllEmployees())
   const [filterFn,setFilterFn] =useState({fn:items => {return items;}});
   const [openPopUp,setOpenPopUp] = useState(false);
@@ -52,11 +57,21 @@ export default function Employees() {
   const addOrEdit = (employee,resetForm) =>{
     // employeeService.insertEmployee(values)
     //   resetForm();
-      employeeService.insertEmployee(employee)
-      resetForm();
+    if(employee.id ===0)
+       employeeService.insertEmployee(employee)
+    else
+        employeeService.updateEmployee(employee)
+       resetForm();
+      setRecordForEdit(null) 
       setOpenPopUp(false)
       setRecords(employeeService.getAllEmployees())
   }
+
+  const OpenInPopUp = item=>{
+      setRecordForEdit(item)
+      setOpenPopUp(true)
+  }
+
   return (
     <>
       <PageHeader
@@ -86,7 +101,7 @@ export default function Employees() {
         variant="outlined" 
         text="Add New" 
         startIcon={<AddIcon/>}
-        onClick={()=>setOpenPopUp(true)}
+        onClick={()=>{setOpenPopUp(true); setRecordForEdit(null);} }
 
         />
 
@@ -119,6 +134,25 @@ export default function Employees() {
                         item.department
                       }
                     </TableCell>
+                    <TableCell>
+                     <Controls.ActionButton
+                      color="primary"
+                      onClick={()=>OpenInPopUp(item)}
+                     >
+                       <EditOutlinedIcon fontSize="small"/>
+                  
+
+                     </Controls.ActionButton>
+                     <Controls.ActionButton
+                      color="secondary"
+                      onClick={()=>setOpenPopUp(item)}
+                     >
+                       <CloseIcon fontSize="small"/>
+       
+
+                     </Controls.ActionButton>
+                    </TableCell>
+            
                   </TableRow>
                   )
                 )
@@ -133,7 +167,10 @@ export default function Employees() {
        openPopUp={openPopUp}
        setOpenPopUp={setOpenPopUp}
       >
-      <EmployeeForm addOrEdit={addOrEdit}/>
+      <EmployeeForm 
+      addOrEdit={addOrEdit}
+      recordForEdit={recordForEdit}
+      />
       </PopUp>
     </>
   )
